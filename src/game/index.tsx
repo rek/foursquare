@@ -8,10 +8,11 @@ type GameProps = {
 }
 
 const Game: SFC<GameProps> = () => {
-  const width = 3
+  const width = 5
   const height = 4
 
   const store = GameStore.create({width, height})
+  console.log('store', store)
 
   return (
     <div>
@@ -20,8 +21,8 @@ const Game: SFC<GameProps> = () => {
       />
 
       <GameGrid
-        width={3}
-        height={4}
+        width={width}
+        height={height}
         store={store}
       />
     </div>
