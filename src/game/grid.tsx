@@ -38,7 +38,16 @@ const GridCell = (props: {
   )
 }
 
-const GridRow = observer((props: {amount: number, cellId: number, classes: any, children: (cellProps: {columnId: number, cellId: number}) => ReactNode}) => {
+// observer here is to update the cell content on change
+const GridRow = observer((props: {
+  amount: number,
+  cellId: number,
+  classes: any,
+  children: (cellProps: {
+    columnId: number,
+    cellId: number
+  }) => ReactNode
+}) => {
   return (
     <Grid container justify='center' spacing={1}>
       {map(range(props.amount), (columnId) => {
@@ -58,7 +67,8 @@ const GridRow = observer((props: {amount: number, cellId: number, classes: any, 
   )
 })
 
-export const GameGrid = (props: {
+// observer here is to update the 'insert' button when store changes
+export const GameGrid = observer((props: {
   width: number,
   height: number,
   store: IStore,
@@ -78,23 +88,28 @@ export const GameGrid = (props: {
               classes={classes}
             >
               {(cellProps) => {
-                return props.store.getState(cellProps.columnId, cellProps.cellId) ? 'on' : 'off'
+                const cell = props.store.getCell(cellProps.columnId, cellProps.cellId)
+
+                return cell.isOn
+                  ? cell.playerName
+                  : 'off'
               }}
             </GridRow>
           )
         })}
 
-        <GridRow
-          amount={props.width}
-          cellId={-1}
-          classes={classes}
-        >
-          {(cellProps) => {
-            return <Button onClick={props.store.insert(cellProps.columnId)}>Insert</Button>
-          }}
-        </GridRow>
-
+        {props.store.playing &&
+          <GridRow
+            amount={props.width}
+            cellId={-1}
+            classes={classes}
+          >
+            {(cellProps) => {
+              return <Button onClick={props.store.insert(cellProps.columnId)}>Insert</Button>
+            }}
+          </GridRow>
+        }
       </Grid>
     </Grid>
   )
-}
+})

@@ -2,14 +2,15 @@ import React from 'react'
 import {observer} from 'mobx-react'
 
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
+// import Button from '@material-ui/core/Button'
 
 import {IStore} from './store'
 
 const Header = (props: {
   store: IStore,
 }) => {
-  console.log('store', props.store)
+  // console.log('store', props.store)
+
   return (
     <div>
       <Typography align='center'>
