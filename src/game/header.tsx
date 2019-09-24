@@ -15,9 +15,11 @@ const Header = (props: {
       <Typography align='center'>
         Foursquare
       </Typography>
+      {/*
       <Button onClick={props.store.restart}>
         Restart Game
       </Button>
+      */}
       <div>
         <Typography align='center' variant='caption'>
           Current turn: {props.store.currentPlayer}

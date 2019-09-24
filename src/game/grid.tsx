@@ -1,4 +1,5 @@
 import React, {ReactNode} from 'react'
+import {observer} from 'mobx-react'
 import range from 'lodash/range'
 import map from 'lodash/map'
 
@@ -37,7 +38,7 @@ const GridCell = (props: {
   )
 }
 
-const GridRow = (props: {amount: number, cellId: number, classes: any, children: (cellProps: {columnId: number, cellId: number}) => ReactNode}) => {
+const GridRow = observer((props: {amount: number, cellId: number, classes: any, children: (cellProps: {columnId: number, cellId: number}) => ReactNode}) => {
   return (
     <Grid container justify='center' spacing={1}>
       {map(range(props.amount), (columnId) => {
@@ -55,7 +56,7 @@ const GridRow = (props: {amount: number, cellId: number, classes: any, children:
       })}
     </Grid>
   )
-}
+})
 
 export const GameGrid = (props: {
   width: number,

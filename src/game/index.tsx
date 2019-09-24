@@ -8,7 +8,10 @@ type GameProps = {
 }
 
 const Game: SFC<GameProps> = () => {
-  const store = GameStore.create()
+  const width = 3
+  const height = 4
+
+  const store = GameStore.create({width, height})
 
   return (
     <div>
