@@ -2,13 +2,13 @@ import React, {SFC} from 'react'
 
 import {GameGrid} from './grid'
 import Header from './header'
-import Store from './store'
+import {GameStore} from './store'
 
 type GameProps = {
 }
 
 const Game: SFC<GameProps> = () => {
-  const store = Store.create()
+  const store = GameStore.create()
 
   return (
     <div>

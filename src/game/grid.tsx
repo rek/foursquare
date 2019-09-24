@@ -5,6 +5,9 @@ import map from 'lodash/map'
 import {makeStyles, createStyles, Theme} from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
+import Button from '@material-ui/core/Button'
+
+import {IStore} from './store'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,17 +37,17 @@ const GridCell = (props: {
   )
 }
 
-const GridRow = (props: {amount: number, cellId: number, classes: any, children: (cellProps: {rowId: number, cellId: number}) => ReactNode}) => {
+const GridRow = (props: {amount: number, cellId: number, classes: any, children: (cellProps: {columnId: number, cellId: number}) => ReactNode}) => {
   return (
     <Grid container justify='center' spacing={1}>
-      {map(range(props.amount), (rowId) => {
+      {map(range(props.amount), (columnId) => {
         return (
           <GridCell
-            key={`${props.cellId}-${rowId}`}
+            key={`${props.cellId}-${columnId}`}
             {...props}
           >
             {props.children && props.children({
-              rowId,
+              columnId,
               cellId: props.cellId,
             })}
           </GridCell>
@@ -57,7 +60,7 @@ const GridRow = (props: {amount: number, cellId: number, classes: any, children:
 export const GameGrid = (props: {
   width: number,
   height: number,
-  store: any,
+  store: IStore,
 }) => {
   const classes = useStyles()
 
@@ -74,7 +77,7 @@ export const GameGrid = (props: {
               classes={classes}
             >
               {(cellProps) => {
-                return props.store.getState(cellProps.rowId, cellProps.cellId) ? 'on' : 'off'
+                return props.store.getState(cellProps.columnId, cellProps.cellId) ? 'on' : 'off'
               }}
             </GridRow>
           )
@@ -86,7 +89,7 @@ export const GameGrid = (props: {
           classes={classes}
         >
           {(cellProps) => {
-            return <div>Insert</div>
+            return <Button onClick={props.store.insert(cellProps.columnId)}>Insert</Button>
           }}
         </GridRow>
 

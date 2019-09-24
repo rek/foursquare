@@ -1,9 +1,17 @@
-import {types} from 'mobx-state-tree'
+import {
+  types,
+  Instance,
+} from 'mobx-state-tree'
 
-const GameStore = types.model('GameStore', {
+export const GameStore = types.model('GameStore', {
+  turn: true, // true = player 1
 })
   .views((self) => {
     return {
+      get currentPlayer() {
+        return self.turn ? 'Player 1' : 'Player 2'
+      },
+
       getState: (rowId: number, cellId: number) => {
         console.log(rowId, cellId); return true
       }
@@ -11,9 +19,22 @@ const GameStore = types.model('GameStore', {
   })
 
   .actions((self) => {
-    return {
+    const actions = {
+      restart() {
+        self.turn = true
+      },
 
+      changeTurn: () => {
+        self.turn = !self.turn
+      },
+
+      insert: (column: number) => () => {
+        console.log('column', column)
+        actions.changeTurn()
+      },
     }
+
+    return actions
   })
 
-export default GameStore
+export type IStore = Instance<typeof GameStore>
