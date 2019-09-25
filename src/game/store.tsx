@@ -195,7 +195,8 @@ export const GameStore = types.model('GameStore', {
       },
 
       restart() {
-        // self.columns = []
+        // @ts-ignore
+        self.columns = []
         self.turn = true
         self.playing = true
         actions.generate()

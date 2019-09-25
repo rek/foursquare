@@ -1,8 +1,8 @@
 import React from 'react'
 import {observer} from 'mobx-react'
 
+import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
-// import Button from '@material-ui/core/Button'
 
 import {IStore} from './store'
 
@@ -16,11 +16,9 @@ const Header = (props: {
       <Typography align='center'>
         Foursquare
       </Typography>
-      {/*
       <Button onClick={props.store.restart}>
         Restart Game
       </Button>
-      */}
       <div>
         <Typography align='center' variant='caption'>
           Current turn: {props.store.currentPlayer}

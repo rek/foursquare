@@ -39,6 +39,8 @@ describe('Store tests', function() {
   describe('Main Game Store', function() {
     let game
 
+    const getInsertionForColumn = (colId) => game.insert(colId)
+
     beforeEach(function() {
       game = GameStore.create({width: 4, height: 4})
     })
@@ -55,8 +57,8 @@ describe('Store tests', function() {
     })
 
     test('simple victory - vertical', function() {
-      const insertFirstCol = game.insert(0)
-      const insertSecondCol = game.insert(1)
+      const insertFirstCol = getInsertionForColumn(0)
+      const insertSecondCol = getInsertionForColumn(1)
 
       insertFirstCol()
       insertSecondCol()
@@ -68,6 +70,24 @@ describe('Store tests', function() {
 
       insertFirstCol()
       expect(game.playing).toEqual(false)
+    })
+
+    test('Restart game', () => {
+      const insertFirstCol = getInsertionForColumn(0)
+
+      insertFirstCol()
+      insertFirstCol()
+      insertFirstCol()
+      insertFirstCol()
+
+      expect(game.columns[0].cells[0].isOn).toEqual(true)
+      expect(game.columns[0].cells[1].isOn).toEqual(true)
+
+      game.restart()
+
+      expect(game.columns[0].cells[0].isOn).toEqual(false)
+      expect(game.columns[0].cells[1].isOn).toEqual(false)
+
     })
   })
 
