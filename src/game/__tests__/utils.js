@@ -1,10 +1,19 @@
-export const getCell = () => {
+export const getCell = (extras = {}) => {
   return {
     isOn: false,
     player: true,
 
     isTop: false,
     isBottom: false,
+
+    ...extras
+  }
+}
+
+export const getColumn = (extras = {}) => {
+  return {
+    cells: [],
+    ...extras
   }
 }
 

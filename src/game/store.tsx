@@ -67,6 +67,8 @@ export const GameBoardColumn = types.model('GameBoardColumn', {
   .actions((self) => {
     return {
       addMove(player: boolean) {
+        // console.log('Adding move for:', player)
+
         // find the last position that a move has been added to
         findLast(self.cells, (cell, id) => {
           if (!cell.isOn) {
@@ -316,6 +318,8 @@ export const GameStore = types.model('GameStore', {
       },
 
       insert: (column: number) => () => {
+        // console.log('Adding move into col:', column)
+
         // add a move for the current user
         self.columns[column].addMove(self.turn)
 
