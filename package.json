@@ -21,7 +21,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --coverage --colors --verbose",
+    "lint": "eslint --ext js,ts,tsx src",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

@@ -8,7 +8,7 @@ import map from 'lodash/map'
 import findLast from 'lodash/findLast'
 
 // @refactor: move to new file - GameBoardCell
-const GameBoardCell = types.model('GameBoardCell', {
+export const GameBoardCell = types.model('GameBoardCell', {
   isOn: false,
   player: true,
 
@@ -45,7 +45,7 @@ const GameBoardCell = types.model('GameBoardCell', {
   })
 
 // @refactor: move to new file - GameBoardColumn
-const GameBoardColumn = types.model('GameBoardColumn', {
+export const GameBoardColumn = types.model('GameBoardColumn', {
   cells: types.array(GameBoardCell)
 })
   .views((self) => {
