@@ -8,6 +8,7 @@ import {IStore} from './store'
 
 const Header = (props: {
   store: IStore,
+  undo: any,
 }) => {
   // console.log('store', props.store)
 
@@ -19,6 +20,11 @@ const Header = (props: {
       <Button onClick={props.store.restart}>
         Restart Game
       </Button>
+      <div>
+        <Button onClick={props.undo}>
+          Undo last move
+        </Button>
+      </div>
       <div>
         <Typography align='center' variant='caption'>
           Current turn: {props.store.currentPlayer}

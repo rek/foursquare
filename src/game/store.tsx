@@ -10,7 +10,7 @@ import findLast from 'lodash/findLast'
 // @refactor: move to new file - GameBoardCell
 export const GameBoardCell = types.model('GameBoardCell', {
   isOn: false,
-  player: true,
+  player: 0,
 
   isTop: false,
   isBottom: false,
@@ -18,10 +18,10 @@ export const GameBoardCell = types.model('GameBoardCell', {
   .views((self) => {
     return {
       get playerName() {
-        return self.player ? 'Player 1' : 'Player 2'
+        return `Player ${self.player + 1}`
       },
 
-      hasMoveFromPlayer(player: boolean) {
+      hasMoveFromPlayer(player: number) {
         return self.isOn && self.player === player
       }
     }
@@ -37,7 +37,7 @@ export const GameBoardCell = types.model('GameBoardCell', {
         self.isBottom = true
       },
 
-      makeMove(player: boolean) {
+      makeMove(player: number) {
         self.isOn = true
         self.player = player
       },
@@ -66,7 +66,7 @@ export const GameBoardColumn = types.model('GameBoardColumn', {
 
   .actions((self) => {
     return {
-      addMove(player: boolean) {
+      addMove(player: number) {
         // console.log('Adding move for:', player)
 
         // find the last position that a move has been added to
@@ -81,19 +81,24 @@ export const GameBoardColumn = types.model('GameBoardColumn', {
   })
 
 export const GameStore = types.model('GameStore', {
-  turn: true, // true = player 1
+  turn: 0, // 0 = player 1
   playing: true, // game is active
 
   winAmount: 3,
+
+  playersLimit: 3,
+
   width: 0,
   height: 0,
+
+  // history: types.optional(TimeTraveller, {targetPath: '../columns'}),
 
   columns: types.optional(types.array(GameBoardColumn), [])
 })
   .views((self) => {
     const views = {
       get currentPlayer() {
-        return self.turn ? 'Player 1' : 'Player 2'
+        return `Player ${self.turn + 1}`
       },
 
       hasColumn(columnId: number): boolean {
@@ -133,6 +138,11 @@ export const GameStore = types.model('GameStore', {
         }
 
         if (!cell.isTop) {
+
+          if (!views.hasColumn(columnId + 1)) {
+            return undefined
+          }
+
           return views.getCell(columnId + 1, cellId - 1)
         }
 
@@ -141,6 +151,10 @@ export const GameStore = types.model('GameStore', {
 
       getAdjacentCell: (columnId: number, cellId: number) => {
         if (!views.hasColumn(columnId)) {
+          return undefined
+        }
+
+        if (!views.hasColumn(columnId + 1)) {
           return undefined
         }
 
@@ -197,18 +211,22 @@ export const GameStore = types.model('GameStore', {
       restart() {
         // @ts-ignore
         self.columns = []
-        self.turn = true
+        self.turn = 0
         self.playing = true
         actions.generate()
       },
 
       changeTurn: () => {
-        self.turn = !self.turn
+        if (self.turn === self.playersLimit - 1) {
+          self.turn = 0
+        } else {
+          self.turn++
+        }
       },
 
       checkVictory() {
         type winnerType = {
-          player?: boolean
+          player?: number
         }
 
         type matchType = {
@@ -222,7 +240,7 @@ export const GameStore = types.model('GameStore', {
         const checkCell = (
           mode: keyof matchType,
           cell: any,
-          player: boolean,
+          player: number,
           result: winnerType,
           previousCellMatches: matchType
         ): number => {
@@ -251,7 +269,7 @@ export const GameStore = types.model('GameStore', {
         const checkAdjecentCells = (
           columnIndex: number,
           cellIndex: number,
-          player: boolean,
+          player: number,
           result: winnerType = {player: undefined},
           previousCellMatches: matchType = {
             matchingCellInline: 0,
@@ -270,6 +288,9 @@ export const GameStore = types.model('GameStore', {
 
           // don't need to search up or backwards, as down and across/inline already covers those directions
           checkingLine += checkCell('matchingCellBelow', self.getCellBelow(columnIndex, cellIndex - previousCellMatches['matchingCellBelow']), player, result, previousCellMatches)
+
+          // columnIndex + previousCellMatches['matchingCellDiagonalAbove']
+
           checkingLine += checkCell('matchingCellDiagonalAbove', self.getAdjacentCellAbove(columnIndex + previousCellMatches['matchingCellDiagonalAbove'], cellIndex + previousCellMatches['matchingCellDiagonalAbove']), player, result, previousCellMatches)
           checkingLine += checkCell('matchingCellInline', self.getAdjacentCell(columnIndex + previousCellMatches['matchingCellInline'], cellIndex), player, result, previousCellMatches)
           checkingLine += checkCell('matchingCellDiagonalBelow', self.getAdjacentCellBelow(columnIndex - previousCellMatches['matchingCellDiagonalBelow'], cellIndex - previousCellMatches['matchingCellDiagonalBelow']), player, result, previousCellMatches)
@@ -328,6 +349,17 @@ export const GameStore = types.model('GameStore', {
           ? actions.endGame()
           : actions.changeTurn()
       },
+
+      // undo() {
+      //   console.log('undo')
+      //   self.history.undo()
+      //   if (self.history.canUndo) {
+      //     console.log('can')
+      //     self.history.undo()
+      //   }
+
+      //   self.changeTurn(true)
+      // },
     }
 
     return actions

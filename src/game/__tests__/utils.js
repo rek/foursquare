@@ -1,7 +1,7 @@
 export const getCell = (extras = {}) => {
   return {
     isOn: false,
-    player: true,
+    player: 0,
 
     isTop: false,
     isBottom: false,

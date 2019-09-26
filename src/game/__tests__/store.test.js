@@ -46,26 +46,33 @@ describe('Store tests', function() {
     })
 
     test('Initial conditions', function() {
-      expect(game.turn).toEqual(true)
+      expect(game.turn).toEqual(0)
       expect(game.playing).toEqual(true)
     })
 
     test('Change turn', function() {
-      expect(game.turn).toEqual(true)
+      expect(game.turn).toEqual(0)
       game.changeTurn()
-      expect(game.turn).toEqual(false)
+      expect(game.turn).toEqual(1)
+      game.changeTurn()
+      expect(game.turn).toEqual(2)
+      game.changeTurn()
+      expect(game.turn).toEqual(0)
     })
 
     test('simple victory - vertical', function() {
       const insertFirstCol = getInsertionForColumn(0)
       const insertSecondCol = getInsertionForColumn(1)
+      const insertThirdCol = getInsertionForColumn(2)
 
       insertFirstCol()
       insertSecondCol()
+      insertThirdCol()
       expect(game.playing).toEqual(true)
 
       insertFirstCol()
       insertSecondCol()
+      insertThirdCol()
       expect(game.playing).toEqual(true)
 
       insertFirstCol()
